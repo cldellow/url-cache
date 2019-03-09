@@ -25,13 +25,13 @@ class Cache(root: File) {
   // This makes it easy to invalidate the cache by deleting it using normal
   // tools like `rm`.
   def fetchNamed(url: String): Array[Byte] =
-    fetch(url, cachePrefix = "misc", name = url.toLowerCase.replaceAll("[^a-z0-9.]", "_").replaceAll("_+", "_"))
+    fetch(url, prefix = "misc", name = url.toLowerCase.replaceAll("[^a-z0-9.]", "_").replaceAll("_+", "_"))
 
-  def fetch(url: String, range: (Int, Int) = null, cachePrefix: String = null, name: String = null): Array[Byte] = {
+  def fetch(url: String, range: (Int, Int) = null, prefix: String = null, name: String = null): Array[Byte] = {
     val filehash = hash(url)
     val filehashDir = filehash.take(2) + "/" + filehash.drop(2).take(2)
 
-    val dirPrefix = List(Option(cachePrefix), if(name == null) Some(filehashDir) else None).flatten
+    val dirPrefix = List(Option(prefix), if(name == null) Some(filehashDir) else None).flatten
     val fname = Option(name).getOrElse(filehash) +
       Option(range).map { case (start, len) => "-" + start + "-" + len }.getOrElse("")
 
